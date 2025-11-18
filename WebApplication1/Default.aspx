@@ -51,6 +51,12 @@
         <h2>TryIt</h2>
 
         <!-- WCF: WebDownload -->
+        <div id="tryitPoker" class="tryit-section">
+            <asp:Button runat="server" ID="btnNewGame" Text="New Game" OnClick="btnNewGame_Click" />
+            <pre><asp:Literal runat="server" ID="litPoker" /></pre>
+        </div>
+
+        <!-- WCF: WebDownload -->
         <div id="tryitWebDownload" class="tryit-section">
             <h3>WebDownload (WCF)</h3>
             <div class="input-group">

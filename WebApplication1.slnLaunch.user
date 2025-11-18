@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "WebApplication1\\WebApplication1.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express (Microsoft Edge)"
+      },
+      {
+        "Path": "PokerEngine\\PokerEngine.csproj",
+        "Action": "Start",
+        "DebugTarget": "IIS Express (Microsoft Edge)"
+      }
+    ]
+  }
+]

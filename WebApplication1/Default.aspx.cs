@@ -1,11 +1,13 @@
-﻿using System;
+﻿using LocalComponents;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.UI;
 using WebApplication1.ServiceReference1;
-using LocalComponents;
 
 namespace WebApplication1
 {
@@ -486,6 +488,17 @@ namespace WebApplication1
             catch (WebException ex) { return ReadError(ex); }
         }
 
+        private string DoPut(string url, string body)
+        {
+            using (var wc = new WebClient())
+            {
+                wc.Encoding = Encoding.UTF8;
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                try { return wc.UploadString(url, "PUT", body ?? string.Empty); }
+                catch (WebException ex) { return ReadError(ex); }
+            }
+        }
+
         private string ReadError(WebException ex)
         {
             try
@@ -496,6 +509,12 @@ namespace WebApplication1
                     return reader.ReadToEnd();
             }
             catch { return ex.Message; }
+        }
+
+        protected void btnNewGame_Click(object sender, EventArgs e)
+        {
+            string result = DoPut("https://localhost:44335/api/games/", "");
+            litPoker.Text = JToken.Parse(result).ToString(Formatting.Indented).Replace("\r\n", "<br/>");
         }
     }
 }

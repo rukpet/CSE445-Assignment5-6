@@ -51,6 +51,24 @@ namespace WebApplication1
         protected global::System.Web.UI.WebControls.GridView gvDirectory;
 
         /// <summary>
+        /// btnNewGame control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnNewGame;
+
+        /// <summary>
+        /// litPoker control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPoker;
+
+        /// <summary>
         /// txtUrl control.
         /// </summary>
         /// <remarks>

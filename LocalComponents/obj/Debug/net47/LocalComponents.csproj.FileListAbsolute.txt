@@ -7,3 +7,13 @@ C:\Users\vlads\Desktop\assignment5\WebApplication1\LocalComponents\obj\Debug\net
 C:\Users\vlads\Desktop\assignment5\WebApplication1\LocalComponents\obj\Debug\net47\LocalComponents.csproj.CoreCompileInputs.cache
 C:\Users\vlads\Desktop\assignment5\WebApplication1\LocalComponents\obj\Debug\net47\LocalComponents.dll
 C:\Users\vlads\Desktop\assignment5\WebApplication1\LocalComponents\obj\Debug\net47\LocalComponents.pdb
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\bin\Debug\net47\LocalComponents.dll
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\bin\Debug\net47\LocalComponents.pdb
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\obj\Debug\net47\LocalComponents.csproj.AssemblyReference.cache
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\obj\Debug\net47\LocalComponents.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\obj\Debug\net47\LocalComponents.AssemblyInfoInputs.cache
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\obj\Debug\net47\LocalComponents.AssemblyInfo.cs
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\obj\Debug\net47\LocalComponents.csproj.CoreCompileInputs.cache
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\obj\Debug\net47\LocalComponents.sourcelink.json
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\obj\Debug\net47\LocalComponents.dll
+C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\obj\Debug\net47\LocalComponents.pdb

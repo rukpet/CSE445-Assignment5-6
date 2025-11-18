@@ -1,6 +1,6 @@
 is_global = true
 build_property.RootNamespace = LocalComponents
-build_property.ProjectDir = C:\Users\vlads\Desktop\assignment5\WebApplication1\LocalComponents\
+build_property.ProjectDir = C:\Users\rukpe\Documents\cse598\Assignment5-6\LocalComponents\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.CsWinRTUseWindowsUIXamlProjections = false
