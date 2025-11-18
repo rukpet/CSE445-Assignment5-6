@@ -26,5 +26,12 @@ namespace PokerEngine.Models
 
         // Transient
         internal Deck Deck { get; set; } = new Deck(0);
+
+        public class ActionRequest
+        {
+            public Guid GameId { get; set; }
+            public string ActionType { get; set; }
+            public int Amount { get; set; }
+        }
     }
 }

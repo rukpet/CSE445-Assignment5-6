@@ -57,12 +57,39 @@
             <pre><asp:Literal runat="server" ID="litPoker" /></pre>
         </div>
 
+<<<<<<< HEAD
         <!-- REST: ApplyAction -->
         <div id="tryitPokerApplyAction" class="tryit-section">
             <h3>PockerEngine New Game (REST)</h3>
             // TODO: tryitPokerApplyAction
         </div>
         
+=======
+        <!-- REST: Apply poker action -->
+        <div id="tryitPokerApplyAction" class="tryit-section">
+            <h3>Poker apply action (REST)</h3>
+            <div class="input-group">
+                <label>Game Id:</label>
+                <asp:TextBox runat="server" ID="txtPokerGameId" Width="400" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtPokerGameId"
+                    ErrorMessage="Game Id is required" ValidationGroup="PokerAction"
+                    CssClass="validation-error" Display="Dynamic" />
+            </div>
+            <div class="input-group">
+                <label>Action Type (Raise/Call/Fold):</label>
+                <asp:TextBox runat="server" ID="txtPokerActionType" Width="200" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtPokerActionType"
+                    ErrorMessage="Action type is required" ValidationGroup="PokerAction"
+                    CssClass="validation-error" Display="Dynamic" />
+            </div>
+            <div class="input-group">
+                <label>Amount (0 for fold/check):</label>
+                <asp:TextBox runat="server" ID="txtPokerAmount" Width="200" />
+            </div>
+            <asp:Button runat="server" ID="btnPokerApplyAction" Text="Apply Action" OnClick="btnPokerApplyAction_Click" ValidationGroup="PokerAction" />
+            <pre><asp:Literal runat="server" ID="litPokerApplyActionResult" /></pre>
+        </div>
+>>>>>>> 66a0539d7e02ad1bb423d991aa0ef60dfafc2b61
         
         <!-- DLL Password hash -->
         <div id="tryitDllHash" class="tryit-section">

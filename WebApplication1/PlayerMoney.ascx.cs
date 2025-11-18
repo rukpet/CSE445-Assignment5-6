@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace WebApplication1
 {
-    public partial class Player : System.Web.UI.UserControl
+    public partial class PlayerMoney : System.Web.UI.UserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {
