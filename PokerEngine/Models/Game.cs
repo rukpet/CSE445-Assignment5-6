@@ -18,6 +18,8 @@ namespace PokerEngine.Models
         public int Pot { get; set; } = 0;
         public int CurrentBet { get; set; } = 0;
         public int MinRaise { get; set; } = 10;
+        public int BettingRoundStartIndex { get; set; }
+        public List<Guid> Winners { get; set; } = new List<Guid>();
 
         public List<Card> Board { get; set; } = new List<Card>(5);
         public List<Player> Players { get; set; } = new List<Player>(5);
