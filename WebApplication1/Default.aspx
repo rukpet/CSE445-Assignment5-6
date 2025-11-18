@@ -50,10 +50,44 @@
     <section id="tryit">
         <h2>TryIt</h2>
 
-        <!-- WCF: WebDownload -->
+        <!-- WCF: NewGame -->
         <div id="tryitPoker" class="tryit-section">
+            <h3>Pocker new game (REST)</h3>
             <asp:Button runat="server" ID="btnNewGame" Text="New Game" OnClick="btnNewGame_Click" />
             <pre><asp:Literal runat="server" ID="litPoker" /></pre>
+        </div>
+        
+        <!-- DLL Password hash -->
+        <div id="tryitDllHash" class="tryit-section">
+            <h3>Password hash (DLL)</h3>
+            <div class="input-group">
+                <label>Pass to hash:</label>
+                <asp:TextBox runat="server" ID="txtDllHashInput" Width="400" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtDllHashInput" 
+                    ErrorMessage="Data is required" ValidationGroup="DllHash" 
+                    CssClass="validation-error" Display="Dynamic" />
+            </div>
+            <asp:Button runat="server" ID="btnDllHash" Text="Hash (DLL)" OnClick="btnDllHash_Click" ValidationGroup="DllHash" />
+            <pre><asp:Literal runat="server" ID="litDllHashResult" /></pre>
+        </div>
+
+        <!-- DLL Password verify -->
+        <div id="tryitDllVerify" class="tryit-section">
+            <h3>Password verify (DLL)</h3>
+            <div class="input-group">
+                <label>Pass to verify:</label>
+                <asp:TextBox runat="server" ID="txtDllVerifyInput" Width="400" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtDllVerifyInput" 
+                    ErrorMessage="Data is required" ValidationGroup="DllVerify" 
+                    CssClass="validation-error" Display="Dynamic" />
+                <label>Hashed pass:</label>
+                <asp:TextBox runat="server" ID="txtDllHashedInput" Width="400" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtDllHashedInput" 
+                    ErrorMessage="Data is required" ValidationGroup="DllVerify" 
+                    CssClass="validation-error" Display="Dynamic" />
+            </div>
+            <asp:Button runat="server" ID="btnDllVerify" Text="Verify (DLL)" OnClick="btnDllVerify_Click" ValidationGroup="DllVerify" />
+            <pre><asp:Literal runat="server" ID="litDllVerifyResult" /></pre>
         </div>
 
         <!-- WCF: WebDownload -->

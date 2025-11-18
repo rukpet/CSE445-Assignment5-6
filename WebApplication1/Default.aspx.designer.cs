@@ -69,6 +69,69 @@ namespace WebApplication1
         protected global::System.Web.UI.WebControls.Literal litPoker;
 
         /// <summary>
+        /// txtDllHashInput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDllHashInput;
+
+        /// <summary>
+        /// btnDllHash control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDllHash;
+
+        /// <summary>
+        /// litDllHashResult control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litDllHashResult;
+
+        /// <summary>
+        /// txtDllVerifyInput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDllVerifyInput;
+
+        /// <summary>
+        /// txtDllHashedInput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDllHashedInput;
+
+        /// <summary>
+        /// btnDllVerify control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDllVerify;
+
+        /// <summary>
+        /// litDllVerifyResult control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litDllVerifyResult;
+
+        /// <summary>
         /// txtUrl control.
         /// </summary>
         /// <remarks>

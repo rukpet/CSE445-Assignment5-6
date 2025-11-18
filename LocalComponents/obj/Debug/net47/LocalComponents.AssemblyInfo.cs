@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LocalComponents")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5fba679b0b7beabae5a7afb992a77ef8cf5aff57")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6188f5fe81c4018dda2210d2a2b86655483b97fa")]
 [assembly: System.Reflection.AssemblyProductAttribute("LocalComponents")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LocalComponents")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

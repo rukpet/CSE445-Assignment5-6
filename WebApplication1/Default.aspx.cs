@@ -516,5 +516,34 @@ namespace WebApplication1
             string result = DoPut("https://localhost:44335/api/games/", "");
             litPoker.Text = JToken.Parse(result).ToString(Formatting.Indented).Replace("\r\n", "<br/>");
         }
+
+        protected void btnDllHash_Click(object sender, EventArgs e)
+        {
+            string data = txtDllHashInput.Text ?? "";
+            try
+            {
+                string result = PasswordHandler.HashPassword(data);
+                litDllHashResult.Text = HttpUtility.HtmlEncode(result);
+            }
+            catch (Exception ex)
+            {
+                litDllHashResult.Text = HttpUtility.HtmlEncode("DLL hashing error: " + ex.ToString());
+            }
+        }
+
+        protected void btnDllVerify_Click(object sender, EventArgs e)
+        {
+            string verifyData = txtDllVerifyInput.Text ?? "";
+            string hashedData = txtDllHashedInput.Text ?? "";
+            try
+            {
+                bool result = PasswordHandler.VerifyPassword(verifyData, hashedData);
+                litDllVerifyResult.Text = HttpUtility.HtmlEncode(result);
+            }
+            catch (Exception ex)
+            {
+                litDllVerifyResult.Text = HttpUtility.HtmlEncode("DLL hashing error: " + ex.ToString());
+            }
+        }
     }
 }
