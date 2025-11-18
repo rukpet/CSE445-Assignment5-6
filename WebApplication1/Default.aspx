@@ -51,14 +51,18 @@
         <h2>TryIt</h2>
 
         <!-- WCF: NewGame -->
-        <div id="tryitPoker" class="tryit-section">
+        <div id="tryitPokerNewGame" class="tryit-section">
             <h3>PockerEngine New Game (REST)</h3>
             <asp:Button runat="server" ID="btnNewGame" Text="New Game" OnClick="btnNewGame_Click" />
             <pre><asp:Literal runat="server" ID="litPoker" /></pre>
         </div>
 
-        <!-- WCF: ApplyAction -->
-        // TODO: ApplyAction
+        <!-- REST: ApplyAction -->
+        <div id="tryitPokerApplyAction" class="tryit-section">
+            <h3>PockerEngine New Game (REST)</h3>
+            // TODO: tryitPokerApplyAction
+        </div>
+        
         
         <!-- DLL Password hash -->
         <div id="tryitDllHash" class="tryit-section">
