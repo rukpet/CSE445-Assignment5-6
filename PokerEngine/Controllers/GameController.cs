@@ -83,14 +83,20 @@ namespace PokerEngine.Controllers
             return NotFound();
         }
 
-        // POST api/<controller>
-        [HttpPost]
-        public IHttpActionResult ApplyAction([FromBody] Guid id, [FromBody] string actionType, [FromBody] int amount)
+        // POST api/games/apply
+        [HttpPost, Route("apply")]
+        public IHttpActionResult ApplyAction([FromBody] Game.ActionRequest request)
         {
-            if (!GameRepository.Games.TryGetValue(id, out Game game))
+            if (request == null)
+                return BadRequest("Action request is required.");
+
+            if (!GameRepository.Games.TryGetValue(request.GameId, out Game game))
                 return NotFound();
 
-            PlayerAction action = game.AvailableActions.Find(a => a.Type.ToString() == actionType);
+            if (!Enum.TryParse(request.ActionType, true, out ActionType parsedActionType))
+                return BadRequest("Unknown action type.");
+
+            PlayerAction action = game.AvailableActions.Find(a => a.Type == parsedActionType);
 
             if (action == null)
                 return NotFound();
@@ -109,25 +115,25 @@ namespace PokerEngine.Controllers
                     game.Log.Push(new LogEntry { Message = $"Player {currentPlayer.PlayerId} checked." });
                     break;
                 case ActionType.Call:
-                    if (amount < 0)
+                    if (request.Amount < 0)
                         return BadRequest("Amount must be non-negative.");
-                    if (amount > currentPlayer.Stack)
+                    if (request.Amount > currentPlayer.Stack)
                         return BadRequest("Player does not have enough chips to call.");
 
-                    currentPlayer.Stack -= amount;
-                    game.Pot += amount;
-                    game.Log.Push(new LogEntry { Message = $"Player {currentPlayer.PlayerId} called with {amount}." });
+                    currentPlayer.Stack -= request.Amount;
+                    game.Pot += request.Amount;
+                    game.Log.Push(new LogEntry { Message = $"Player {currentPlayer.PlayerId} called with {request.Amount}." });
                     break;
                 case ActionType.Raise:
-                    if (amount < game.MinRaise)
+                    if (request.Amount < game.MinRaise)
                         return BadRequest("Raise amount is below minimum.");
-                    if (amount > currentPlayer.Stack)
+                    if (request.Amount > currentPlayer.Stack)
                         return BadRequest("Player does not have enough chips to raise.");
 
-                    currentPlayer.Stack -= amount;
-                    game.Pot += amount;
-                    game.CurrentBet += amount;
-                    game.Log.Push(new LogEntry { Message = $"Player {currentPlayer.PlayerId} raised by {amount}." });
+                    currentPlayer.Stack -= request.Amount;
+                    game.Pot += request.Amount;
+                    game.CurrentBet += request.Amount;
+                    game.Log.Push(new LogEntry { Message = $"Player {currentPlayer.PlayerId} raised by {request.Amount}." });
                     break;
                 default:
                     return BadRequest("Unsupported action type.");
