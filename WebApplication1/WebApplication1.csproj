@@ -132,7 +132,7 @@
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
     <Content Include="Member.aspx" />
-    <Content Include="PlayerMoney.ascx" />
+    <Content Include="PlayerMoneyView.ascx" />
     <Content Include="PlayerDeckView.ascx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -249,12 +249,12 @@
     <Compile Include="Member.aspx.designer.cs">
       <DependentUpon>Member.aspx</DependentUpon>
     </Compile>
-    <Compile Include="PlayerMoney.ascx.cs">
-      <DependentUpon>PlayerMoney.ascx</DependentUpon>
+    <Compile Include="PlayerMoneyView.ascx.cs">
+      <DependentUpon>PlayerMoneyView.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="PlayerMoney.ascx.designer.cs">
-      <DependentUpon>PlayerMoney.ascx</DependentUpon>
+    <Compile Include="PlayerMoneyView.ascx.designer.cs">
+      <DependentUpon>PlayerMoneyView.ascx</DependentUpon>
     </Compile>
     <Compile Include="PlayerDeckView.ascx.cs">
       <DependentUpon>PlayerDeckView.ascx</DependentUpon>

@@ -599,5 +599,20 @@ namespace WebApplication1
                 litDllVerifyResult.Text = HttpUtility.HtmlEncode("DLL hashing error: " + ex.ToString());
             }
         }
+
+        protected void btnPokerVisualize_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnPokerDeckVisualize_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnPokerMoneyVisualize_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

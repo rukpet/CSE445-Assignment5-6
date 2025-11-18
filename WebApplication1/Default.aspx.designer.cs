@@ -123,6 +123,51 @@ namespace WebApplication1
         protected global::System.Web.UI.WebControls.TextBox txtPokerBotGameId;
 
         /// <summary>
+        /// txtPokerVisualizeGameId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPokerVisualizeGameId;
+
+        /// <summary>
+        /// btnPokerDeckVisualize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPokerDeckVisualize;
+
+        /// <summary>
+        /// playerDeckView control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::WebApplication1.PlayerDeckView playerDeckView;
+
+        /// <summary>
+        /// txtPokerMoneyGameId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPokerMoneyGameId;
+
+        /// <summary>
+        /// btnPokerMoneyVisualize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPokerMoneyVisualize;
+
+        /// <summary>
         /// txtDllHashInput control.
         /// </summary>
         /// <remarks>

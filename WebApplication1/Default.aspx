@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WebApplication1.Default" %>
+<%@ Register Src="~/PlayerDeckView.ascx" TagPrefix="uc" TagName="PlayerDeckView" %>
 
 <!DOCTYPE html>
 <html>
@@ -95,6 +96,34 @@
             // TODO PockerEngine Bot (WCF)
             <%--<asp:Button runat="server" ID="Button1" Text="Bot" OnClick="" ValidationGroup="PokerAction" />
             <pre><asp:Literal runat="server" ID="Literal1" /></pre>--%>
+        </div>
+
+        <!-- Poker: Current Player View -->
+        <div id="pokerDeckView" class="tryit-section">
+            <h3>Current Player Deck View</h3>
+            <div class="input-group">
+                <label>Game Id:</label>
+                <asp:TextBox runat="server" ID="txtPokerVisualizeGameId" Width="400" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtPokerVisualizeGameId"
+                    ErrorMessage="Game Id is required" ValidationGroup="PokerVisualize"
+                    CssClass="validation-error" Display="Dynamic" />
+            </div>
+            <asp:Button runat="server" ID="btnPokerDeckVisualize" Text="Visualize" OnClick="btnPokerDeckVisualize_Click" ValidationGroup="PokerVisualize" />
+            <uc:PlayerDeckView runat="server" ID="playerDeckView" Visible="false" />
+        </div>
+
+        <!-- Poker: Players Money View -->
+        <div id="pokerPlayersMoneyView" class="tryit-section">
+            <h3>Players Money View</h3>
+            <div class="input-group">
+                <label>Game Id:</label>
+                <asp:TextBox runat="server" ID="txtPokerMoneyGameId" Width="400" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtPokerMoneyGameId"
+                    ErrorMessage="Game Id is required" ValidationGroup="PokerMoney"
+                    CssClass="validation-error" Display="Dynamic" />
+            </div>
+            <asp:Button runat="server" ID="btnPokerMoneyVisualize" Text="Visualize" OnClick="btnPokerMoneyVisualize_Click" ValidationGroup="PokerMoney" />
+            // Repetetly show PlayerMoneyView.ascx for every player
         </div>
         
         <!-- DLL Password hash -->
