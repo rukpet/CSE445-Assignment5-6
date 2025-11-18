@@ -186,6 +186,24 @@ namespace WebApplication1
         protected global::System.Web.UI.WebControls.Button btnPokerMoneyVisualize;
 
         /// <summary>
+        /// litPokerMoneyStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPokerMoneyStatus;
+
+        /// <summary>
+        /// phPlayersMoney control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phPlayersMoney;
+
+        /// <summary>
         /// txtDllHashInput control.
         /// </summary>
         /// <remarks>

@@ -1,4 +1,4 @@
-﻿using LocalComponents;
+using LocalComponents;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -340,12 +340,74 @@ namespace WebApplication1
 
         protected void btnPokerDeckVisualize_Click(object sender, EventArgs e)
         {
+            if (!Guid.TryParse(txtPokerVisualizeGameId.Text, out Guid gameId))
+            {
+                playerDeckView.Visible = true;
+                playerDeckView.ShowErrorMessage("Invalid game id.");
+                return;
+            }
 
+            string gameState = DoGet($"https://localhost:44335/api/games/{gameId}");
+
+            playerDeckView.Visible = true;
+
+            if (string.IsNullOrWhiteSpace(gameState))
+            {
+                playerDeckView.ShowErrorMessage("Could not load game state.");
+                return;
+            }
+
+            playerDeckView.RenderFromJson(gameState);
         }
 
         protected void btnPokerMoneyVisualize_Click(object sender, EventArgs e)
         {
+            phPlayersMoney.Controls.Clear();
+            litPokerMoneyStatus.Text = string.Empty;
 
+            if (!Guid.TryParse(txtPokerMoneyGameId.Text, out Guid gameId))
+            {
+                litPokerMoneyStatus.Text = "Invalid game id.";
+                return;
+            }
+
+            string gameState = DoGet($"https://localhost:44335/api/games/{gameId}");
+
+            if (string.IsNullOrWhiteSpace(gameState))
+            {
+                litPokerMoneyStatus.Text = "Could not load game state.";
+                return;
+            }
+
+            try
+            {
+                JObject game = JObject.Parse(gameState);
+                JArray players = (JArray)game["Players"];
+
+                if (players == null || players.Count == 0)
+                {
+                    litPokerMoneyStatus.Text = "No players found for this game.";
+                    return;
+                }
+
+                foreach (JToken player in players)
+                {
+                    Guid playerId = player.Value<Guid>("PlayerId");
+                    int stack = player.Value<int?>("Stack") ?? 0;
+
+                    PlayerMoneyView moneyView = (PlayerMoneyView)LoadControl("~/PlayerMoneyView.ascx");
+                    moneyView.BindPlayer(playerId, stack);
+                    phPlayersMoney.Controls.Add(moneyView);
+                }
+            }
+            catch (JsonReaderException)
+            {
+                litPokerMoneyStatus.Text = HttpUtility.HtmlEncode(gameState);
+            }
+            catch (Exception ex)
+            {
+                litPokerMoneyStatus.Text = HttpUtility.HtmlEncode("Error loading game: " + ex.Message);
+            }
         }
     }
 }

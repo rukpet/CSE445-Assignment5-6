@@ -1,5 +1,6 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WebApplication1.Default" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WebApplication1.Default" %>
 <%@ Register Src="~/PlayerDeckView.ascx" TagPrefix="uc" TagName="PlayerDeckView" %>
+<%@ Register Src="~/PlayerMoneyView.ascx" TagPrefix="uc" TagName="PlayerMoneyView" %>
 
 <!DOCTYPE html>
 <html>
@@ -122,7 +123,8 @@
                     CssClass="validation-error" Display="Dynamic" />
             </div>
             <asp:Button runat="server" ID="btnPokerMoneyVisualize" Text="Visualize" OnClick="btnPokerMoneyVisualize_Click" ValidationGroup="PokerMoney" />
-            // Repetetly show PlayerMoneyView.ascx for every player
+            <asp:Literal runat="server" ID="litPokerMoneyStatus" />
+            <asp:PlaceHolder runat="server" ID="phPlayersMoney" />
 
         </div>
         
