@@ -92,9 +92,8 @@
                     ErrorMessage="Game Id is required" ValidationGroup="PokerBot"
                     CssClass="validation-error" Display="Dynamic" />
             </div>
-            // TODO PockerEngine Bot (WCF)
-            <%--<asp:Button runat="server" ID="Button1" Text="Bot" OnClick="" ValidationGroup="PokerAction" />
-            <pre><asp:Literal runat="server" ID="Literal1" /></pre>--%>
+            <asp:Button runat="server" ID="btnPokerBot" Text="Ask Bot" OnClick="btnPokerBot_Click" ValidationGroup="PokerBot" />
+            <pre><asp:Literal runat="server" ID="litPokerBotResult" /></pre>
         </div>
         
         <!-- DLL Password hash -->
