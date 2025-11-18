@@ -233,7 +233,7 @@ namespace WebApplication1
 
         protected void btnNewGame_Click(object sender, EventArgs e)
         {
-            string result = DoPut("http://webstrar10.fulton.asu.edu/page1/api/games/", "");
+            string result = DoPut("https://localhost:44335/api/games/", "");
             litPoker.Text = JToken.Parse(result).ToString(Newtonsoft.Json.Formatting.Indented).Replace("\r\n", "<br/>");
         }
 
