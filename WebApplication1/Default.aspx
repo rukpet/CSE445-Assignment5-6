@@ -52,10 +52,13 @@
 
         <!-- WCF: NewGame -->
         <div id="tryitPoker" class="tryit-section">
-            <h3>Pocker new game (REST)</h3>
+            <h3>PockerEngine New Game (REST)</h3>
             <asp:Button runat="server" ID="btnNewGame" Text="New Game" OnClick="btnNewGame_Click" />
             <pre><asp:Literal runat="server" ID="litPoker" /></pre>
         </div>
+
+        <!-- WCF: ApplyAction -->
+        // TODO: ApplyAction
         
         <!-- DLL Password hash -->
         <div id="tryitDllHash" class="tryit-section">
@@ -79,7 +82,9 @@
                 <asp:TextBox runat="server" ID="txtDllVerifyInput" Width="400" />
                 <asp:RequiredFieldValidator runat="server" ControlToValidate="txtDllVerifyInput" 
                     ErrorMessage="Data is required" ValidationGroup="DllVerify" 
-                    CssClass="validation-error" Display="Dynamic" />
+                    CssClass="validation-error" Display="Dynamic" /> 
+            </div>
+            <div class="input-group">
                 <label>Hashed pass:</label>
                 <asp:TextBox runat="server" ID="txtDllHashedInput" Width="400" />
                 <asp:RequiredFieldValidator runat="server" ControlToValidate="txtDllHashedInput" 
