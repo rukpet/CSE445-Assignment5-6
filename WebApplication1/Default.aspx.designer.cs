@@ -69,6 +69,51 @@ namespace WebApplication1
         protected global::System.Web.UI.WebControls.Literal litPoker;
 
         /// <summary>
+        /// txtPokerGameId control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPokerGameId;
+
+        /// <summary>
+        /// txtPokerActionType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPokerActionType;
+
+        /// <summary>
+        /// txtPokerAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPokerAmount;
+
+        /// <summary>
+        /// btnPokerApplyAction control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnPokerApplyAction;
+
+        /// <summary>
+        /// litPokerApplyActionResult control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPokerApplyActionResult;
+
+        /// <summary>
         /// txtDllHashInput control.
         /// </summary>
         /// <remarks>

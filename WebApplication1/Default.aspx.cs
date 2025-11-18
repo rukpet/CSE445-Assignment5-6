@@ -62,6 +62,15 @@ namespace WebApplication1
             {
                 new DirectoryRow {
                     Provider = "Vladyslav Saniuk",
+                    ComponentType = "REST",
+                    Operation = "Poker apply action",
+                    Parameters = "gameId: guid, actionType: string, amount: int",
+                    ReturnType = "string (game JSON)",
+                    Description = "Submits a player action to the poker engine",
+                    TryItAnchor = "#tryitPokerApplyAction"
+                },
+                new DirectoryRow {
+                    Provider = "Vladyslav Saniuk",
                     ComponentType = "WSDL (WCF)",
                     Operation = "WebDownload(url: string)",
                     Parameters = "url: string",
@@ -499,6 +508,17 @@ namespace WebApplication1
             }
         }
 
+        private string DoJsonPost(string url, string body)
+        {
+            using (var wc = new WebClient())
+            {
+                wc.Encoding = Encoding.UTF8;
+                wc.Headers[HttpRequestHeader.ContentType] = "application/json";
+                try { return wc.UploadString(url, "POST", body ?? string.Empty); }
+                catch (WebException ex) { return ReadError(ex); }
+            }
+        }
+
         private string ReadError(WebException ex)
         {
             try
@@ -515,6 +535,40 @@ namespace WebApplication1
         {
             string result = DoPut("https://localhost:44335/api/games/", "");
             litPoker.Text = JToken.Parse(result).ToString(Formatting.Indented).Replace("\r\n", "<br/>");
+        }
+
+        protected void btnPokerApplyAction_Click(object sender, EventArgs e)
+        {
+            if (!Guid.TryParse(txtPokerGameId.Text, out var gameId))
+            {
+                litPokerApplyActionResult.Text = "Invalid game id.";
+                return;
+            }
+
+            int amount = 0;
+            if (!string.IsNullOrWhiteSpace(txtPokerAmount.Text) && !int.TryParse(txtPokerAmount.Text, out amount))
+            {
+                litPokerApplyActionResult.Text = "Amount must be a number.";
+                return;
+            }
+
+            var request = new
+            {
+                GameId = gameId,
+                ActionType = txtPokerActionType.Text,
+                Amount = amount
+            };
+
+            var response = DoJsonPost("https://localhost:44335/api/games/apply", JsonConvert.SerializeObject(request));
+
+            try
+            {
+                litPokerApplyActionResult.Text = JToken.Parse(response).ToString(Formatting.Indented).Replace("\r\n", "<br/>");
+            }
+            catch (JsonReaderException)
+            {
+                litPokerApplyActionResult.Text = HttpUtility.HtmlEncode(response);
+            }
         }
 
         protected void btnDllHash_Click(object sender, EventArgs e)
