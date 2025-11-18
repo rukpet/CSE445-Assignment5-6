@@ -179,319 +179,12 @@ namespace WebApplication1
         }
 
         // TryIt handlers
-        protected void btnWebDownload_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Exact copy from Assignment 3 webDownload_Click
-                Service1Client proxy = new Service1Client();
-                string url = txtUrl.Text;
-                
-                if (string.IsNullOrEmpty(url))
-                {
-                    litWebDownloadResult.Text = "Please enter a valid URL";
-                    return;
-                }
-                
-                // Ensure URL has protocol if not specified
-                if (!url.StartsWith("http://") && !url.StartsWith("https://"))
-                {
-                    url = "http://" + url;
-                }
-                
-                string content = proxy.WebDownload(url);
-                
-                // Limit the result size for display purposes (first 2000 characters)
-                if (content != null && content.Length > 2000)
-                    content = content.Substring(0, 2000) + "... [Content truncated for display]";
-                
-                // HTML encode the content to make it safe for display
-                litWebDownloadResult.Text = HttpUtility.HtmlEncode(content);
-            }
-            catch (Exception ex)
-            {
-                litWebDownloadResult.Text = "Error: " + ex.Message;
-            }
-        }
-
-        protected void btnWordFilter_Click(object sender, EventArgs e)
-        {
-            string text = txtWordFilterInput.Text ?? "";
-            string baseUri = GetBaseUri();
-            string uri = baseUri + "api/wordfilter.ashx?text=" + HttpUtility.UrlEncode(text);
-            litWordFilterResult.Text = HttpUtility.HtmlEncode(DoPost(uri, ""));
-        }
-
-        protected void btnCatalogAdd_Click(object sender, EventArgs e)
-        {
-            string baseUri = GetBaseUri();
-            string url = baseUri + $"api/catalog.ashx?category={HttpUtility.UrlEncode(txtCategoryAdd.Text)}&item={HttpUtility.UrlEncode(txtItemAdd.Text)}";
-            litCatalogAddResult.Text = HttpUtility.HtmlEncode(DoPost(url, ""));
-        }
-
-        protected void btnCatalogDelete_Click(object sender, EventArgs e)
-        {
-            string baseUri = GetBaseUri();
-            string url = baseUri + $"api/catalog.ashx?category={HttpUtility.UrlEncode(txtCategoryDel.Text)}&item={HttpUtility.UrlEncode(txtItemDel.Text)}";
-            litCatalogDeleteResult.Text = HttpUtility.HtmlEncode(DoDelete(url));
-        }
-
-        protected void btnCatalogList_Click(object sender, EventArgs e)
-        {
-            string baseUri = GetBaseUri();
-            string url = baseUri + "api/catalog.ashx";
-            litCatalogListResult.Text = HttpUtility.HtmlEncode(DoGet(url));
-        }
-
-        protected void btnCatalogGet_Click(object sender, EventArgs e)
-        {
-            string baseUri = GetBaseUri();
-            string url = baseUri + $"api/catalog.ashx?action=getitem&category={HttpUtility.UrlEncode(txtCategoryGet.Text)}&item={HttpUtility.UrlEncode(txtItemGet.Text)}";
-            string result = DoGet(url);
-            litCatalogGetResult.Text = HttpUtility.HtmlEncode(result);
-            
-            // Show the "Add to Cart" button only if the item was found
-            if (result.StartsWith("Found:"))
-            {
-                btnAddToCart.Visible = true;
-                // Store the found item data in ViewState for the Add to Cart operation
-                ViewState["FoundCategory"] = txtCategoryGet.Text;
-                ViewState["FoundItem"] = txtItemGet.Text;
-            }
-            else
-            {
-                btnAddToCart.Visible = false;
-                ViewState["FoundCategory"] = null;
-                ViewState["FoundItem"] = null;
-            }
-        }
-
-        protected void btnAddToCart_Click(object sender, EventArgs e)
-        {
-            string category = ViewState["FoundCategory"] as string;
-            string item = ViewState["FoundItem"] as string;
-            
-            if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(item))
-            {
-                string baseUri = GetBaseUri();
-                string url = baseUri + $"api/cart.ashx?action=add&category={HttpUtility.UrlEncode(category)}&item={HttpUtility.UrlEncode(item)}";
-                string result = DoPost(url, "");
-                
-                // Show the result and hide the Add to Cart button
-                litCatalogGetResult.Text += Environment.NewLine + Environment.NewLine + HttpUtility.HtmlEncode(result);
-                btnAddToCart.Visible = false;
-                
-                // Clear the ViewState
-                ViewState["FoundCategory"] = null;
-                ViewState["FoundItem"] = null;
-            }
-            else
-            {
-                litCatalogGetResult.Text += Environment.NewLine + Environment.NewLine + "Error: No item data available to add to cart.";
-                btnAddToCart.Visible = false;
-            }
-        }
-
-        protected void btnCartRefresh_Click(object sender, EventArgs e)
-        {
-            string baseUri = GetBaseUri();
-            string url = baseUri + "api/cart.ashx";
-            litCartResult.Text = HttpUtility.HtmlEncode(DoGet(url));
-        }
-
-        protected void btnCartCheckout_Click(object sender, EventArgs e)
-        {
-            string baseUri = GetBaseUri();
-            string url = baseUri + "api/cart.ashx?action=checkout";
-            string result = DoPost(url, "");
-            litCartResult.Text = HttpUtility.HtmlEncode(result);
-            
-            // Show the address validation panel after displaying cart contents
-            if (result.Contains("Thank you for shopping with us!"))
-            {
-                pnlAddress.Visible = true;
-                lblAddressError.Text = ""; // Clear any previous error
-            }
-        }
-
-        protected void btnProceed_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Read user inputs
-                string userState = txtState.Text?.Trim();
-                string userZip = txtZip.Text?.Trim();
-                
-                if (string.IsNullOrEmpty(userState) || string.IsNullOrEmpty(userZip))
-                {
-                    lblAddressError.Text = "Please provide both State and ZIP code.";
-                    return;
-                }
-
-                // Call zippopotam.us API to validate ZIP code and state
-                string apiUrl = $"http://api.zippopotam.us/us/{userZip}";
-                
-                using (WebClient wc = new WebClient())
-                {
-                    wc.Encoding = Encoding.UTF8;
-                    string jsonResponse = wc.DownloadString(apiUrl);
-                    
-                    // Parse JSON response using basic string parsing (since we're avoiding external JSON libraries)
-                    // Look for the state information in the JSON response
-                    string apiState = ExtractStateFromZipResponse(jsonResponse);
-                    
-                    if (string.IsNullOrEmpty(apiState))
-                    {
-                        lblAddressError.Text = "Invalid ZIP code. Please provide a valid ZIP code.";
-                        return;
-                    }
-                    
-                    // Compare states (case-insensitive)
-                    if (string.Equals(userState, apiState, StringComparison.OrdinalIgnoreCase) ||
-                        IsStateAbbreviationMatch(userState, apiState))
-                    {
-                        // Valid address - show success and hide panel
-                        litCartResult.Text += "\n\nOrder processed successfully! Your items will be shipped to " + 
-                                            userState + ", " + userZip + ".";
-                        pnlAddress.Visible = false;
-                    }
-                    else
-                    {
-                        lblAddressError.Text = "Invalid address. The provided state does not match the ZIP code. Please provide a valid State and ZIP code.";
-                    }
-                }
-            }
-            catch (WebException webEx)
-            {
-                // Handle API errors (404, network issues, etc.)
-                lblAddressError.Text = $"Invalid address. Please provide a valid State and ZIP code. (Error: {webEx.Message})";
-            }
-            catch (Exception ex)
-            {
-                // Handle other errors
-                lblAddressError.Text = $"Error validating address: {ex.Message}. Please try again.";
-            }
-        }
-
-        protected void btnDllEncrypt_Click(object sender, EventArgs e)
-        {
-            string data = txtDllEncryptInput.Text ?? "";
-            try
-            {
-                string result = EncryptionUtils.Encrypt(data);
-                litDllEncryptResult.Text = HttpUtility.HtmlEncode(result);
-            }
-            catch (Exception ex)
-            {
-                litDllEncryptResult.Text = HttpUtility.HtmlEncode("DLL encryption error: " + ex.Message);
-            }
-        }
-
-        protected void btnDllDecrypt_Click(object sender, EventArgs e)
-        {
-            string data = txtDllDecryptInput.Text ?? "";
-            try
-            {
-                string result = EncryptionUtils.Decrypt(data);
-                litDllDecryptResult.Text = HttpUtility.HtmlEncode(result);
-            }
-            catch (Exception ex)
-            {
-                litDllDecryptResult.Text = HttpUtility.HtmlEncode("DLL decryption error: " + ex.Message);
-            }
-        }
-
-        // Helper method to extract state from ZIP API response
-        private string ExtractStateFromZipResponse(string jsonResponse)
-        {
-            try
-            {
-                // Simple JSON parsing to extract state from zippopotam.us response
-                // Look for "places":[{"place name":"...","state":"...","state abbreviation":"..."}]
-                
-                // Find the state field
-                int stateIndex = jsonResponse.IndexOf("\"state\":");
-                if (stateIndex > 0)
-                {
-                    int startQuote = jsonResponse.IndexOf("\"", stateIndex + 8);
-                    int endQuote = jsonResponse.IndexOf("\"", startQuote + 1);
-                    if (startQuote > 0 && endQuote > startQuote)
-                    {
-                        return jsonResponse.Substring(startQuote + 1, endQuote - startQuote - 1);
-                    }
-                }
-                
-                return null;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        // Helper method to check if user provided state abbreviation matches full state name
-        private bool IsStateAbbreviationMatch(string userInput, string fullStateName)
-        {
-            // Simple mapping for common states - in a real app you'd have a complete mapping
-            Dictionary<string, string> stateAbbreviations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-            {
-                {"AL", "Alabama"}, {"AK", "Alaska"}, {"AZ", "Arizona"}, {"AR", "Arkansas"}, {"CA", "California"},
-                {"CO", "Colorado"}, {"CT", "Connecticut"}, {"DE", "Delaware"}, {"FL", "Florida"}, {"GA", "Georgia"},
-                {"HI", "Hawaii"}, {"ID", "Idaho"}, {"IL", "Illinois"}, {"IN", "Indiana"}, {"IA", "Iowa"},
-                {"KS", "Kansas"}, {"KY", "Kentucky"}, {"LA", "Louisiana"}, {"ME", "Maine"}, {"MD", "Maryland"},
-                {"MA", "Massachusetts"}, {"MI", "Michigan"}, {"MN", "Minnesota"}, {"MS", "Mississippi"}, {"MO", "Missouri"},
-                {"MT", "Montana"}, {"NE", "Nebraska"}, {"NV", "Nevada"}, {"NH", "New Hampshire"}, {"NJ", "New Jersey"},
-                {"NM", "New Mexico"}, {"NY", "New York"}, {"NC", "North Carolina"}, {"ND", "North Dakota"}, {"OH", "Ohio"},
-                {"OK", "Oklahoma"}, {"OR", "Oregon"}, {"PA", "Pennsylvania"}, {"RI", "Rhode Island"}, {"SC", "South Carolina"},
-                {"SD", "South Dakota"}, {"TN", "Tennessee"}, {"TX", "Texas"}, {"UT", "Utah"}, {"VT", "Vermont"},
-                {"VA", "Virginia"}, {"WA", "Washington"}, {"WV", "West Virginia"}, {"WI", "Wisconsin"}, {"WY", "Wyoming"}
-            };
-
-            // Check if user input is an abbreviation that matches the full state name
-            if (stateAbbreviations.ContainsKey(userInput) && 
-                string.Equals(stateAbbreviations[userInput], fullStateName, StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-            
-            // Check if full state name matches abbreviation lookup (reverse check)
-            foreach (KeyValuePair<string, string> kvp in stateAbbreviations)
-            {
-                if (string.Equals(kvp.Value, fullStateName, StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(kvp.Key, userInput, StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-            
-            return false;
-        }
-
         private BotDecisionResponse RequestPokerBot(string gameStateJson)
         {
             BotRequest request = new BotRequest { GameStateJson = gameStateJson };
             BotDecisionResponse response = new PokerBotServiceClient().GetBotDecision(request);
 
             return response;
-        }
-
-        private string GetBaseUri()
-        {
-            HttpRequest req = HttpContext.Current.Request;
-            string appPath = req.ApplicationPath;
-            if (!appPath.EndsWith("/")) appPath += "/";
-            return $"{req.Url.Scheme}://{req.Url.Authority}{appPath}";
-        }
-
-        private string DoPost(string url, string body)
-        {
-            using (WebClient wc = new WebClient())
-            {
-                wc.Encoding = Encoding.UTF8;
-                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                try { return wc.UploadString(url, "POST", body ?? string.Empty); }
-                catch (WebException ex) { return ReadError(ex); }
-            }
         }
 
         private string DoGet(string url)
@@ -502,20 +195,6 @@ namespace WebApplication1
                 try { return wc.DownloadString(url); }
                 catch (WebException ex) { return ReadError(ex); }
             }
-        }
-
-        private string DoDelete(string url)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "DELETE";
-            try
-            {
-                using (HttpWebResponse resp = (HttpWebResponse)request.GetResponse())
-                using (System.IO.Stream stream = resp.GetResponseStream())
-                using (System.IO.StreamReader reader = new System.IO.StreamReader(stream))
-                    return reader.ReadToEnd();
-            }
-            catch (WebException ex) { return ReadError(ex); }
         }
 
         private string DoPut(string url, string body)
@@ -529,7 +208,7 @@ namespace WebApplication1
             }
         }
 
-        private string DoJsonPost(string url, string body)
+        private string DoJson(string url, string body)
         {
             using (WebClient wc = new WebClient())
             {
@@ -580,7 +259,7 @@ namespace WebApplication1
                 Amount = amount
             };
 
-            string response = DoJsonPost("https://localhost:44335/api/games/apply", JsonConvert.SerializeObject(request));
+            string response = DoJson("https://localhost:44335/api/games/apply", JsonConvert.SerializeObject(request));
 
             try
             {
@@ -657,11 +336,6 @@ namespace WebApplication1
             {
                 litDllVerifyResult.Text = HttpUtility.HtmlEncode("DLL hashing error: " + ex.ToString());
             }
-        }
-
-        protected void btnPokerVisualize_Click(object sender, EventArgs e)
-        {
-
         }
 
         protected void btnPokerDeckVisualize_Click(object sender, EventArgs e)
