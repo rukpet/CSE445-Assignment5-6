@@ -392,11 +392,11 @@ namespace WebApplication1
 
                 foreach (JToken player in players)
                 {
-                    Guid playerId = player.Value<Guid>("PlayerId");
+                    string playerId = player.Value<string>("PlayerId");
                     int stack = player.Value<int?>("Stack") ?? 0;
 
                     PlayerMoneyView moneyView = (PlayerMoneyView)LoadControl("~/PlayerMoneyView.ascx");
-                    moneyView.BindPlayer(playerId, stack);
+                    moneyView.BindPlayer(Guid.Parse(playerId), stack);
                     phPlayersMoney.Controls.Add(moneyView);
                 }
             }

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\rukpe\Documents\cse598\Assignment5-6\PokerBot\bin\app.publish\</_PublishTargetUrl>
+    <History>True|2025-11-18T20:24:07.3764655Z||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>11/18/2025 16:35:18</publishTime>
+    </File>
+    <File Include="bin/PokerBot.dll">
+      <publishTime>11/18/2025 22:24:06</publishTime>
+    </File>
+    <File Include="bin/PokerBot.pdb">
+      <publishTime>11/18/2025 22:24:06</publishTime>
+    </File>
+    <File Include="PokerBotService.svc">
+      <publishTime>11/18/2025 20:34:05</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>11/18/2025 22:24:06</publishTime>
+    </File>
+  </ItemGroup>
+</Project>
