@@ -340,7 +340,24 @@ namespace WebApplication1
 
         protected void btnPokerDeckVisualize_Click(object sender, EventArgs e)
         {
+            if (!Guid.TryParse(txtPokerVisualizeGameId.Text, out Guid gameId))
+            {
+                playerDeckView.Visible = true;
+                playerDeckView.ShowErrorMessage("Invalid game id.");
+                return;
+            }
 
+            string gameState = DoGet($"https://localhost:44335/api/games/{gameId}");
+
+            playerDeckView.Visible = true;
+
+            if (string.IsNullOrWhiteSpace(gameState))
+            {
+                playerDeckView.ShowErrorMessage("Could not load game state.");
+                return;
+            }
+
+            playerDeckView.RenderFromJson(gameState);
         }
 
         protected void btnPokerMoneyVisualize_Click(object sender, EventArgs e)
