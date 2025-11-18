@@ -7,6 +7,9 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.UI;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.Xml;
 using WebApplication1.ServiceReference1;
 
 namespace WebApplication1
@@ -68,6 +71,15 @@ namespace WebApplication1
                     ReturnType = "string (game JSON)",
                     Description = "Submits a player action to the poker engine",
                     TryItAnchor = "#tryitPokerApplyAction"
+                },
+                new DirectoryRow {
+                    Provider = "Vladyslav Saniuk",
+                    ComponentType = "WSDL (WCF)",
+                    Operation = "Poker bot decision",
+                    Parameters = "gameState: json",
+                    ReturnType = "BotDecisionResponse",
+                    Description = "Calls Gemini via WCF to suggest the next poker action",
+                    TryItAnchor = "#tryitPokerBot"
                 },
                 new DirectoryRow {
                     Provider = "Vladyslav Saniuk",
@@ -454,6 +466,42 @@ namespace WebApplication1
             return false;
         }
 
+        private BotDecisionResponse RequestPokerBot(string gameStateJson)
+        {
+            var serviceUri = new Uri("http://localhost:55613/PokerBotService.svc");
+            var binding = serviceUri.Scheme == Uri.UriSchemeHttps
+                ? new BasicHttpBinding(BasicHttpSecurityMode.Transport)
+                : new BasicHttpBinding(BasicHttpSecurityMode.None);
+
+            binding.MaxReceivedMessageSize = 1024 * 1024;
+            binding.ReaderQuotas.MaxStringContentLength = 1024 * 1024;
+            binding.ReaderQuotas.MaxArrayLength = 1024 * 1024;
+
+            var endpoint = new EndpointAddress(serviceUri);
+
+            var factory = new ChannelFactory<IPokerBotServiceClient>(binding, endpoint);
+            IPokerBotServiceClient channel = null;
+
+            try
+            {
+                channel = factory.CreateChannel();
+                var response = channel.GetBotDecision(new BotRequest { GameStateJson = gameStateJson });
+
+                ((IClientChannel)channel).Close();
+                factory.Close();
+
+                return response;
+            }
+            catch
+            {
+                if (channel != null)
+                    ((IClientChannel)channel).Abort();
+
+                factory.Abort();
+                throw;
+            }
+        }
+
         private string GetBaseUri()
         {
             var req = HttpContext.Current.Request;
@@ -531,6 +579,36 @@ namespace WebApplication1
             catch { return ex.Message; }
         }
 
+        [ServiceContract]
+        private interface IPokerBotServiceClient
+        {
+            [OperationContract]
+            BotDecisionResponse GetBotDecision(BotRequest request);
+        }
+
+        [DataContract]
+        private class BotRequest
+        {
+            [DataMember]
+            public string GameStateJson { get; set; }
+        }
+
+        [DataContract]
+        private class BotDecisionResponse
+        {
+            [DataMember]
+            public string ActionType { get; set; }
+
+            [DataMember]
+            public int Amount { get; set; }
+
+            [DataMember]
+            public string Description { get; set; }
+
+            [DataMember]
+            public string RawModelResponse { get; set; }
+        }
+
         protected void btnNewGame_Click(object sender, EventArgs e)
         {
             string result = DoPut("https://localhost:44335/api/games/", "");
@@ -568,6 +646,44 @@ namespace WebApplication1
             catch (JsonReaderException)
             {
                 litPokerApplyActionResult.Text = HttpUtility.HtmlEncode(response);
+            }
+        }
+
+        protected void btnPokerBot_Click(object sender, EventArgs e)
+        {
+            if (!Guid.TryParse(txtPokerBotGameId.Text, out var gameId))
+            {
+                litPokerBotResult.Text = "Invalid game id.";
+                return;
+            }
+
+            string gameState = DoGet($"https://localhost:44335/api/games/{gameId}");
+
+            if (string.IsNullOrWhiteSpace(gameState))
+            {
+                litPokerBotResult.Text = "Could not load game state.";
+                return;
+            }
+
+            try
+            {
+                var botResponse = RequestPokerBot(gameState);
+                var sb = new StringBuilder();
+                sb.AppendLine($"Action: {botResponse.ActionType} (Amount: {botResponse.Amount})");
+                sb.AppendLine($"Narration: {botResponse.Description}");
+
+                if (!string.IsNullOrWhiteSpace(botResponse.RawModelResponse))
+                {
+                    sb.AppendLine();
+                    sb.AppendLine("Model response:");
+                    sb.AppendLine(botResponse.RawModelResponse);
+                }
+
+                litPokerBotResult.Text = HttpUtility.HtmlEncode(sb.ToString());
+            }
+            catch (Exception ex)
+            {
+                litPokerBotResult.Text = HttpUtility.HtmlEncode("Error calling PokerBot service: " + ex.Message);
             }
         }
 

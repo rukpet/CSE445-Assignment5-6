@@ -12,6 +12,29 @@ namespace PokerBot
     public interface IPokerBotService
     {
         [OperationContract]
-        void DoWork();
+        BotDecisionResponse GetBotDecision(BotRequest request);
+    }
+
+    [DataContract]
+    public class BotRequest
+    {
+        [DataMember(IsRequired = true)]
+        public string GameStateJson { get; set; }
+    }
+
+    [DataContract]
+    public class BotDecisionResponse
+    {
+        [DataMember]
+        public string ActionType { get; set; }
+
+        [DataMember]
+        public int Amount { get; set; }
+
+        [DataMember]
+        public string Description { get; set; }
+
+        [DataMember]
+        public string RawModelResponse { get; set; }
     }
 }
