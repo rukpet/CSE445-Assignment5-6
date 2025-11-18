@@ -9,8 +9,11 @@
       },
       {
         "Path": "PokerEngine\\PokerEngine.csproj",
-        "Action": "Start",
-        "DebugTarget": "IIS Express (Microsoft Edge)"
+        "Action": "Start"
+      },
+      {
+        "Path": "PokerBot\\PokerBot.csproj",
+        "Action": "Start"
       }
     ]
   }

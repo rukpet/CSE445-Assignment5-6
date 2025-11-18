@@ -7,7 +7,11 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.UI;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.Xml;
 using WebApplication1.ServiceReference1;
+using WebApplication1.PokerBotServiceReference;
 
 namespace WebApplication1
 {
@@ -38,8 +42,8 @@ namespace WebApplication1
             }
             else
             {
-                var loginUrl = "~/Login.aspx";
-                var returnUrl = HttpUtility.UrlEncode(VirtualPathUtility.ToAbsolute(protectedUrl));
+                string loginUrl = "~/Login.aspx";
+                string returnUrl = HttpUtility.UrlEncode(VirtualPathUtility.ToAbsolute(protectedUrl));
                 Response.Redirect($"{loginUrl}?returnUrl={returnUrl}", endResponse: false);
             }
         }
@@ -58,7 +62,7 @@ namespace WebApplication1
 
         private void BindServiceDirectory()
         {
-            var rows = new List<DirectoryRow>
+            List<DirectoryRow> rows = new List<DirectoryRow>
             {
                 new DirectoryRow {
                     Provider = "Vladyslav Saniuk",
@@ -68,6 +72,15 @@ namespace WebApplication1
                     ReturnType = "string (game JSON)",
                     Description = "Submits a player action to the poker engine",
                     TryItAnchor = "#tryitPokerApplyAction"
+                },
+                new DirectoryRow {
+                    Provider = "Vladyslav Saniuk",
+                    ComponentType = "WSDL (WCF)",
+                    Operation = "Poker bot decision",
+                    Parameters = "gameState: json",
+                    ReturnType = "BotDecisionResponse",
+                    Description = "Calls Gemini via WCF to suggest the next poker action",
+                    TryItAnchor = "#tryitPokerBot"
                 },
                 new DirectoryRow {
                     Provider = "Vladyslav Saniuk",
@@ -171,7 +184,7 @@ namespace WebApplication1
             try
             {
                 // Exact copy from Assignment 3 webDownload_Click
-                var proxy = new Service1Client();
+                Service1Client proxy = new Service1Client();
                 string url = txtUrl.Text;
                 
                 if (string.IsNullOrEmpty(url))
@@ -203,38 +216,38 @@ namespace WebApplication1
 
         protected void btnWordFilter_Click(object sender, EventArgs e)
         {
-            var text = txtWordFilterInput.Text ?? "";
-            var baseUri = GetBaseUri();
-            var uri = baseUri + "api/wordfilter.ashx?text=" + HttpUtility.UrlEncode(text);
+            string text = txtWordFilterInput.Text ?? "";
+            string baseUri = GetBaseUri();
+            string uri = baseUri + "api/wordfilter.ashx?text=" + HttpUtility.UrlEncode(text);
             litWordFilterResult.Text = HttpUtility.HtmlEncode(DoPost(uri, ""));
         }
 
         protected void btnCatalogAdd_Click(object sender, EventArgs e)
         {
-            var baseUri = GetBaseUri();
-            var url = baseUri + $"api/catalog.ashx?category={HttpUtility.UrlEncode(txtCategoryAdd.Text)}&item={HttpUtility.UrlEncode(txtItemAdd.Text)}";
+            string baseUri = GetBaseUri();
+            string url = baseUri + $"api/catalog.ashx?category={HttpUtility.UrlEncode(txtCategoryAdd.Text)}&item={HttpUtility.UrlEncode(txtItemAdd.Text)}";
             litCatalogAddResult.Text = HttpUtility.HtmlEncode(DoPost(url, ""));
         }
 
         protected void btnCatalogDelete_Click(object sender, EventArgs e)
         {
-            var baseUri = GetBaseUri();
-            var url = baseUri + $"api/catalog.ashx?category={HttpUtility.UrlEncode(txtCategoryDel.Text)}&item={HttpUtility.UrlEncode(txtItemDel.Text)}";
+            string baseUri = GetBaseUri();
+            string url = baseUri + $"api/catalog.ashx?category={HttpUtility.UrlEncode(txtCategoryDel.Text)}&item={HttpUtility.UrlEncode(txtItemDel.Text)}";
             litCatalogDeleteResult.Text = HttpUtility.HtmlEncode(DoDelete(url));
         }
 
         protected void btnCatalogList_Click(object sender, EventArgs e)
         {
-            var baseUri = GetBaseUri();
-            var url = baseUri + "api/catalog.ashx";
+            string baseUri = GetBaseUri();
+            string url = baseUri + "api/catalog.ashx";
             litCatalogListResult.Text = HttpUtility.HtmlEncode(DoGet(url));
         }
 
         protected void btnCatalogGet_Click(object sender, EventArgs e)
         {
-            var baseUri = GetBaseUri();
-            var url = baseUri + $"api/catalog.ashx?action=getitem&category={HttpUtility.UrlEncode(txtCategoryGet.Text)}&item={HttpUtility.UrlEncode(txtItemGet.Text)}";
-            var result = DoGet(url);
+            string baseUri = GetBaseUri();
+            string url = baseUri + $"api/catalog.ashx?action=getitem&category={HttpUtility.UrlEncode(txtCategoryGet.Text)}&item={HttpUtility.UrlEncode(txtItemGet.Text)}";
+            string result = DoGet(url);
             litCatalogGetResult.Text = HttpUtility.HtmlEncode(result);
             
             // Show the "Add to Cart" button only if the item was found
@@ -255,14 +268,14 @@ namespace WebApplication1
 
         protected void btnAddToCart_Click(object sender, EventArgs e)
         {
-            var category = ViewState["FoundCategory"] as string;
-            var item = ViewState["FoundItem"] as string;
+            string category = ViewState["FoundCategory"] as string;
+            string item = ViewState["FoundItem"] as string;
             
             if (!string.IsNullOrEmpty(category) && !string.IsNullOrEmpty(item))
             {
-                var baseUri = GetBaseUri();
-                var url = baseUri + $"api/cart.ashx?action=add&category={HttpUtility.UrlEncode(category)}&item={HttpUtility.UrlEncode(item)}";
-                var result = DoPost(url, "");
+                string baseUri = GetBaseUri();
+                string url = baseUri + $"api/cart.ashx?action=add&category={HttpUtility.UrlEncode(category)}&item={HttpUtility.UrlEncode(item)}";
+                string result = DoPost(url, "");
                 
                 // Show the result and hide the Add to Cart button
                 litCatalogGetResult.Text += Environment.NewLine + Environment.NewLine + HttpUtility.HtmlEncode(result);
@@ -281,16 +294,16 @@ namespace WebApplication1
 
         protected void btnCartRefresh_Click(object sender, EventArgs e)
         {
-            var baseUri = GetBaseUri();
-            var url = baseUri + "api/cart.ashx";
+            string baseUri = GetBaseUri();
+            string url = baseUri + "api/cart.ashx";
             litCartResult.Text = HttpUtility.HtmlEncode(DoGet(url));
         }
 
         protected void btnCartCheckout_Click(object sender, EventArgs e)
         {
-            var baseUri = GetBaseUri();
-            var url = baseUri + "api/cart.ashx?action=checkout";
-            var result = DoPost(url, "");
+            string baseUri = GetBaseUri();
+            string url = baseUri + "api/cart.ashx?action=checkout";
+            string result = DoPost(url, "");
             litCartResult.Text = HttpUtility.HtmlEncode(result);
             
             // Show the address validation panel after displaying cart contents
@@ -318,7 +331,7 @@ namespace WebApplication1
                 // Call zippopotam.us API to validate ZIP code and state
                 string apiUrl = $"http://api.zippopotam.us/us/{userZip}";
                 
-                using (var wc = new WebClient())
+                using (WebClient wc = new WebClient())
                 {
                     wc.Encoding = Encoding.UTF8;
                     string jsonResponse = wc.DownloadString(apiUrl);
@@ -420,7 +433,7 @@ namespace WebApplication1
         private bool IsStateAbbreviationMatch(string userInput, string fullStateName)
         {
             // Simple mapping for common states - in a real app you'd have a complete mapping
-            var stateAbbreviations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            Dictionary<string, string> stateAbbreviations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 {"AL", "Alabama"}, {"AK", "Alaska"}, {"AZ", "Arizona"}, {"AR", "Arkansas"}, {"CA", "California"},
                 {"CO", "Colorado"}, {"CT", "Connecticut"}, {"DE", "Delaware"}, {"FL", "Florida"}, {"GA", "Georgia"},
@@ -442,7 +455,7 @@ namespace WebApplication1
             }
             
             // Check if full state name matches abbreviation lookup (reverse check)
-            foreach (var kvp in stateAbbreviations)
+            foreach (KeyValuePair<string, string> kvp in stateAbbreviations)
             {
                 if (string.Equals(kvp.Value, fullStateName, StringComparison.OrdinalIgnoreCase) &&
                     string.Equals(kvp.Key, userInput, StringComparison.OrdinalIgnoreCase))
@@ -454,17 +467,25 @@ namespace WebApplication1
             return false;
         }
 
+        private BotDecisionResponse RequestPokerBot(string gameStateJson)
+        {
+            BotRequest request = new BotRequest { GameStateJson = gameStateJson };
+            BotDecisionResponse response = new PokerBotServiceClient().GetBotDecision(request);
+
+            return response;
+        }
+
         private string GetBaseUri()
         {
-            var req = HttpContext.Current.Request;
-            var appPath = req.ApplicationPath;
+            HttpRequest req = HttpContext.Current.Request;
+            string appPath = req.ApplicationPath;
             if (!appPath.EndsWith("/")) appPath += "/";
             return $"{req.Url.Scheme}://{req.Url.Authority}{appPath}";
         }
 
         private string DoPost(string url, string body)
         {
-            using (var wc = new WebClient())
+            using (WebClient wc = new WebClient())
             {
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
@@ -475,7 +496,7 @@ namespace WebApplication1
 
         private string DoGet(string url)
         {
-            using (var wc = new WebClient())
+            using (WebClient wc = new WebClient())
             {
                 wc.Encoding = Encoding.UTF8;
                 try { return wc.DownloadString(url); }
@@ -485,13 +506,13 @@ namespace WebApplication1
 
         private string DoDelete(string url)
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "DELETE";
             try
             {
-                using (var resp = (HttpWebResponse)request.GetResponse())
-                using (var stream = resp.GetResponseStream())
-                using (var reader = new System.IO.StreamReader(stream))
+                using (HttpWebResponse resp = (HttpWebResponse)request.GetResponse())
+                using (System.IO.Stream stream = resp.GetResponseStream())
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(stream))
                     return reader.ReadToEnd();
             }
             catch (WebException ex) { return ReadError(ex); }
@@ -499,7 +520,7 @@ namespace WebApplication1
 
         private string DoPut(string url, string body)
         {
-            using (var wc = new WebClient())
+            using (WebClient wc = new WebClient())
             {
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
@@ -510,7 +531,7 @@ namespace WebApplication1
 
         private string DoJsonPost(string url, string body)
         {
-            using (var wc = new WebClient())
+            using (WebClient wc = new WebClient())
             {
                 wc.Encoding = Encoding.UTF8;
                 wc.Headers[HttpRequestHeader.ContentType] = "application/json";
@@ -523,9 +544,9 @@ namespace WebApplication1
         {
             try
             {
-                using (var resp = (HttpWebResponse)ex.Response)
-                using (var stream = resp.GetResponseStream())
-                using (var reader = new System.IO.StreamReader(stream))
+                using (HttpWebResponse resp = (HttpWebResponse)ex.Response)
+                using (System.IO.Stream stream = resp.GetResponseStream())
+                using (System.IO.StreamReader reader = new System.IO.StreamReader(stream))
                     return reader.ReadToEnd();
             }
             catch { return ex.Message; }
@@ -534,12 +555,12 @@ namespace WebApplication1
         protected void btnNewGame_Click(object sender, EventArgs e)
         {
             string result = DoPut("https://localhost:44335/api/games/", "");
-            litPoker.Text = JToken.Parse(result).ToString(Formatting.Indented).Replace("\r\n", "<br/>");
+            litPoker.Text = JToken.Parse(result).ToString(Newtonsoft.Json.Formatting.Indented).Replace("\r\n", "<br/>");
         }
 
         protected void btnPokerApplyAction_Click(object sender, EventArgs e)
         {
-            if (!Guid.TryParse(txtPokerGameId.Text, out var gameId))
+            if (!Guid.TryParse(txtPokerGameId.Text, out Guid gameId))
             {
                 litPokerApplyActionResult.Text = "Invalid game id.";
                 return;
@@ -559,15 +580,53 @@ namespace WebApplication1
                 Amount = amount
             };
 
-            var response = DoJsonPost("https://localhost:44335/api/games/apply", JsonConvert.SerializeObject(request));
+            string response = DoJsonPost("https://localhost:44335/api/games/apply", JsonConvert.SerializeObject(request));
 
             try
             {
-                litPokerApplyActionResult.Text = JToken.Parse(response).ToString(Formatting.Indented).Replace("\r\n", "<br/>");
+                litPokerApplyActionResult.Text = JToken.Parse(response).ToString(Newtonsoft.Json.Formatting.Indented).Replace("\r\n", "<br/>");
             }
             catch (JsonReaderException)
             {
                 litPokerApplyActionResult.Text = HttpUtility.HtmlEncode(response);
+            }
+        }
+
+        protected void btnPokerBot_Click(object sender, EventArgs e)
+        {
+            if (!Guid.TryParse(txtPokerBotGameId.Text, out Guid gameId))
+            {
+                litPokerBotResult.Text = "Invalid game id.";
+                return;
+            }
+
+            string gameState = DoGet($"https://localhost:44335/api/games/{gameId}");
+
+            if (string.IsNullOrWhiteSpace(gameState))
+            {
+                litPokerBotResult.Text = "Could not load game state.";
+                return;
+            }
+
+            try
+            {
+                BotDecisionResponse botResponse = RequestPokerBot(gameState);
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine($"Action: {botResponse.ActionType} (Amount: {botResponse.Amount})");
+                sb.AppendLine($"Narration: {botResponse.Description}");
+
+                if (!string.IsNullOrWhiteSpace(botResponse.RawModelResponse))
+                {
+                    sb.AppendLine();
+                    sb.AppendLine("Model response:");
+                    sb.AppendLine(botResponse.RawModelResponse);
+                }
+
+                litPokerBotResult.Text = HttpUtility.HtmlEncode(sb.ToString());
+            }
+            catch (Exception ex)
+            {
+                litPokerBotResult.Text = HttpUtility.HtmlEncode("Error calling PokerBot service: " + ex.Message);
             }
         }
 
