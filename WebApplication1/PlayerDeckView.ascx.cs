@@ -52,6 +52,8 @@ namespace WebApplication1
                     var player = players[i];
                     string playerId = HttpUtility.HtmlEncode(player.Value<string>("PlayerId") ?? "unknown");
                     bool folded = player.Value<bool?>("Folded") ?? false;
+                    int stack = player.Value<int?>("Stack") ?? 0;
+                    int currentBet = player.Value<int?>("CurrentBet") ?? 0;
 
                     var hole = player["Hole"] as JArray;
                     string cardsDisplay = (i == currentIndex && hole != null && hole.Count > 0)
@@ -59,9 +61,9 @@ namespace WebApplication1
                         : "[hidden]";
 
                     playersSb.AppendLine(FrameLine($"{(i == currentIndex ? ">" : " ")} Player: {playerId}{(folded ? " (folded)" : string.Empty)}"));
-                    playersSb.AppendLine(FrameLine("    O   Hole cards: " + cardsDisplay));
-                    playersSb.AppendLine(FrameLine("   /|\\"));
-                    playersSb.AppendLine(FrameLine("   / \\"));
+                    playersSb.AppendLine(FrameLine($"    O   Stack: {stack} | Bet: {currentBet}"));
+                    playersSb.AppendLine(FrameLine("   /|\\  Hole cards: " + cardsDisplay));
+                    playersSb.AppendLine(FrameLine($"   / \\  {(i == currentIndex ? "To act" : string.Empty)}"));
                     playersSb.AppendLine(FrameLine(string.Empty));
                 }
 
