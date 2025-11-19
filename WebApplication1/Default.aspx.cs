@@ -97,21 +97,21 @@ namespace WebApplication1
                 new DirectoryRow
                 {
                     Provider = "Dmytro Ohorodiichuk",
-                    ComponentType = "REST",
+                    ComponentType = "User control",
                     Operation = "Poker game state viewer",
                     Parameters = "gameId: guid",
-                    ReturnType = "string (game JSON)",
-                    Description = "Loads a game state to visualize the current player deck",
+                    ReturnType = "renders PlayerDeckView",
+                    Description = "Loads game JSON from REST API and renders it via PlayerDeckView user control",
                     TryItAnchor = "#pokerDeckView"
                 },
                 new DirectoryRow
                 {
                     Provider = "Dmytro Ohorodiichuk",
-                    ComponentType = "REST",
+                    ComponentType = "User control",
                     Operation = "Poker players money view",
                     Parameters = "gameId: guid",
-                    ReturnType = "string (game JSON)",
-                    Description = "Displays each player's current stack for a game",
+                    ReturnType = "renders PlayerMoneyView list",
+                    Description = "Loads game JSON from REST API and renders PlayerMoneyView controls for each player",
                     TryItAnchor = "#pokerPlayersMoneyView"
                 },
                 new DirectoryRow
