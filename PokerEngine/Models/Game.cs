@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 
 namespace PokerEngine.Models
@@ -10,6 +12,7 @@ namespace PokerEngine.Models
 
         public int DealerIndex { get; set; }
         public int CurrentIndex { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public Stage Stage { get; set; } = Stage.Preflop;
         public List<PlayerAction> AvailableActions { get; set; } = new List<PlayerAction>();
 

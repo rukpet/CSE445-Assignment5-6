@@ -83,7 +83,6 @@ namespace PokerEngine.Controllers
             return NotFound();
         }
 
-        // POST api/games/apply
         [HttpPost, Route("apply")]
         public IHttpActionResult ApplyAction([FromBody] Game.ActionRequest request)
         {

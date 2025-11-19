@@ -1,4 +1,4 @@
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Text;
@@ -99,19 +99,19 @@ namespace WebApplication1
                 case "spades":
                 case "spade":
                 case "s":
-                    return "&spades;";
+                    return "♠";
                 case "hearts":
                 case "heart":
                 case "h":
-                    return "&hearts;";
+                    return "♥";
                 case "diamonds":
                 case "diamond":
                 case "d":
-                    return "&diams;";
+                    return "♦";
                 case "clubs":
                 case "club":
                 case "c":
-                    return "&clubs;";
+                    return "♣";
                 default:
                     return HttpUtility.HtmlEncode(suit);
             }

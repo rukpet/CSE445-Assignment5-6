@@ -5,10 +5,9 @@
 +--------------------------------------------------------------+
 |   ____                              Game: <asp:Literal runat="server" ID="litGameId" />
 |  /    \   Board Cards               Stage: <asp:Literal runat="server" ID="litStage" />
-| | (  ) |  [<asp:Literal runat="server" ID="litBoard" />]      Pot: <asp:Literal runat="server" ID="litPot" />
-|  \____/                          Current Bet: <asp:Literal runat="server" ID="litCurrentBet" />
+| | (  ) |  [<asp:Literal runat="server" ID="litBoard" />]                   Pot: <asp:Literal runat="server" ID="litPot" />
+|  \____/                             Current Bet: <asp:Literal runat="server" ID="litCurrentBet" />
 |                                                              |
-| Players (avatars with hole cards):                          |
 <asp:Literal runat="server" ID="litPlayers" />
 +--------------------------------------------------------------+
         </pre>
