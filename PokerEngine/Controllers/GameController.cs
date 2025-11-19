@@ -39,8 +39,10 @@ namespace PokerEngine.Controllers
             game.CurrentBet = game.BigBlind;
             game.Pot = game.SmallBlind + game.BigBlind;
             game.Players[sbIdx].Stack -= game.SmallBlind;
+            game.Players[sbIdx].CurrentBet = game.SmallBlind;
             game.Log.Push(new LogEntry { Message = $"Player {game.Players[bbIdx].PlayerId} has small blind." });
             game.Players[bbIdx].Stack -= game.BigBlind;
+            game.Players[bbIdx].CurrentBet = game.BigBlind;
             game.Log.Push(new LogEntry { Message = $"Player {game.Players[bbIdx].PlayerId} has big blind." });
 
             game.CurrentIndex = (game.DealerIndex + 3) % game.Players.Count;
@@ -48,24 +50,7 @@ namespace PokerEngine.Controllers
 
             Player player = game.Players[game.CurrentIndex];
             game.Log.Push(new LogEntry { Message = $"Player {player.PlayerId} is next to play." });
-            game.AvailableActions = new List<PlayerAction>
-            {
-                new PlayerAction
-                {
-                    PlayerId = player.PlayerId,
-                    Type = ActionType.Raise
-                },
-                new PlayerAction
-                {
-                    PlayerId = player.PlayerId,
-                    Type = ActionType.Call
-                },
-                new PlayerAction
-                {
-                    PlayerId = player.PlayerId,
-                    Type = ActionType.Fold
-                }
-            };
+            SetAvailableActions(game, player);
 
             GameRepository.Games.Add(game.GameId, game);
 
@@ -112,9 +97,16 @@ namespace PokerEngine.Controllers
                     game.Log.Push(new LogEntry { Message = $"Player {currentPlayer.PlayerId} folded." });
                     break;
                 case ActionType.Check:
+                    if (game.CurrentBet > currentPlayer.CurrentBet)
+                        return BadRequest("Cannot check while facing a bet.");
                     game.Log.Push(new LogEntry { Message = $"Player {currentPlayer.PlayerId} checked." });
                     break;
                 case ActionType.Call:
+                    int amountToCall = game.CurrentBet - currentPlayer.CurrentBet;
+                    if (amountToCall < 0)
+                        return BadRequest("Call amount cannot be negative.");
+                    if (request.Amount != amountToCall)
+                        return BadRequest("Call amount must match the outstanding bet.");
                     if (request.Amount < 0)
                         return BadRequest("Amount must be non-negative.");
                     if (request.Amount > currentPlayer.Stack)
@@ -122,17 +114,23 @@ namespace PokerEngine.Controllers
 
                     currentPlayer.Stack -= request.Amount;
                     game.Pot += request.Amount;
+                    currentPlayer.CurrentBet += request.Amount;
                     game.Log.Push(new LogEntry { Message = $"Player {currentPlayer.PlayerId} called with {request.Amount}." });
                     break;
                 case ActionType.Raise:
                     if (request.Amount < game.MinRaise)
                         return BadRequest("Raise amount is below minimum.");
-                    if (request.Amount > currentPlayer.Stack)
+                    amountToCall = game.CurrentBet - currentPlayer.CurrentBet;
+                    if (amountToCall < 0)
+                        return BadRequest("Call amount cannot be negative.");
+                    int totalContribution = amountToCall + request.Amount;
+                    if (totalContribution > currentPlayer.Stack)
                         return BadRequest("Player does not have enough chips to raise.");
 
-                    currentPlayer.Stack -= request.Amount;
-                    game.Pot += request.Amount;
-                    game.CurrentBet += request.Amount;
+                    currentPlayer.Stack -= totalContribution;
+                    game.Pot += totalContribution;
+                    currentPlayer.CurrentBet += totalContribution;
+                    game.CurrentBet = currentPlayer.CurrentBet;
                     game.Log.Push(new LogEntry { Message = $"Player {currentPlayer.PlayerId} raised by {request.Amount}." });
                     break;
                 default:
@@ -177,24 +175,7 @@ namespace PokerEngine.Controllers
 
             Player nextPlayer = game.Players[game.CurrentIndex];
             game.Log.Push(new LogEntry { Message = $"Player {nextPlayer.PlayerId} is next to play." });
-            game.AvailableActions = new List<PlayerAction>
-            {
-                new PlayerAction
-                {
-                    PlayerId = nextPlayer.PlayerId,
-                    Type = ActionType.Raise
-                },
-                new PlayerAction
-                {
-                    PlayerId = nextPlayer.PlayerId,
-                    Type = ActionType.Call
-                },
-                new PlayerAction
-                {
-                    PlayerId = nextPlayer.PlayerId,
-                    Type = ActionType.Fold
-                }
-            };
+            SetAvailableActions(game, nextPlayer);
 
             return Ok(game);
         }
@@ -214,6 +195,49 @@ namespace PokerEngine.Controllers
             } while (idx % game.Players.Count != startIndex);
 
             return startIndex;
+        }
+
+        private static void SetAvailableActions(Game game, Player player)
+        {
+            int outstanding = Math.Max(0, game.CurrentBet - player.CurrentBet);
+
+            var actions = new List<PlayerAction>();
+
+            if (outstanding > 0)
+            {
+                actions.Add(new PlayerAction
+                {
+                    PlayerId = player.PlayerId,
+                    Type = ActionType.Call
+                });
+            }
+            else
+            {
+                actions.Add(new PlayerAction
+                {
+                    PlayerId = player.PlayerId,
+                    Type = ActionType.Check
+                });
+
+                actions.Add(new PlayerAction
+                {
+                    PlayerId = player.PlayerId,
+                    Type = ActionType.Call
+                });
+            }
+
+            actions.Add(new PlayerAction
+            {
+                PlayerId = player.PlayerId,
+                Type = ActionType.Raise
+            });
+            actions.Add(new PlayerAction
+            {
+                PlayerId = player.PlayerId,
+                Type = ActionType.Fold
+            });
+
+            game.AvailableActions = actions;
         }
 
         private void AdvanceStage(Game game)
@@ -246,6 +270,10 @@ namespace PokerEngine.Controllers
             if (game.Stage != Stage.Showdown)
             {
                 game.CurrentBet = 0;
+                foreach (var player in game.Players)
+                {
+                    player.CurrentBet = 0;
+                }
             }
         }
 

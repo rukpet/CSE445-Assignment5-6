@@ -356,9 +356,11 @@ namespace WebApplication1
                 {
                     string playerId = player.Value<string>("PlayerId");
                     int stack = player.Value<int?>("Stack") ?? 0;
+                    int currentBet = player.Value<int?>("CurrentBet") ?? 0;
+                    bool folded = player.Value<bool?>("Folded") ?? false;
 
                     PlayerMoneyView moneyView = (PlayerMoneyView)LoadControl("~/PlayerMoneyView.ascx");
-                    moneyView.BindPlayer(Guid.Parse(playerId), stack);
+                    moneyView.BindPlayer(Guid.Parse(playerId), stack, currentBet, folded);
                     phPlayersMoney.Controls.Add(moneyView);
                 }
             }
