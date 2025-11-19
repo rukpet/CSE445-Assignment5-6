@@ -58,7 +58,7 @@ namespace WebApplication1
                         ? string.Join(" ", hole.Select(card => $"[{FormatCard(card)}]"))
                         : "[hidden]";
 
-                    playersSb.AppendLine(FrameLine($"{(i == currentIndex ? "▶" : " ")} Player: {playerId}{(folded ? " (folded)" : string.Empty)}"));
+                    playersSb.AppendLine(FrameLine($"{(i == currentIndex ? ">" : " ")} Player: {playerId}{(folded ? " (folded)" : string.Empty)}"));
                     playersSb.AppendLine(FrameLine("    O   Hole cards: " + cardsDisplay));
                     playersSb.AppendLine(FrameLine("   /|\\"));
                     playersSb.AppendLine(FrameLine("   / \\"));
@@ -99,19 +99,19 @@ namespace WebApplication1
                 case "spades":
                 case "spade":
                 case "s":
-                    return "♠";
+                    return "&spades;";
                 case "hearts":
                 case "heart":
                 case "h":
-                    return "♥";
+                    return "&hearts;";
                 case "diamonds":
                 case "diamond":
                 case "d":
-                    return "♦";
+                    return "&diams;";
                 case "clubs":
                 case "club":
                 case "c":
-                    return "♣";
+                    return "&clubs;";
                 default:
                     return HttpUtility.HtmlEncode(suit);
             }
@@ -119,7 +119,7 @@ namespace WebApplication1
 
         private static string FrameLine(string content)
         {
-            const int innerWidth = 56;
+            const int innerWidth = 63;
             string sanitized = content ?? string.Empty;
 
             if (sanitized.Length > innerWidth)
@@ -127,7 +127,7 @@ namespace WebApplication1
                 sanitized = sanitized.Substring(0, innerWidth);
             }
 
-            return $"║{sanitized.PadRight(innerWidth)}║";
+            return $"| {sanitized.PadRight(innerWidth - 2)}|";
         }
 
         public void ShowErrorMessage(string message)

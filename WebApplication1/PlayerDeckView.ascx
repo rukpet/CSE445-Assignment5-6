@@ -2,15 +2,15 @@
 <div class="player-deck-view">
     <asp:Panel runat="server" ID="pnlContent" Visible="false">
         <pre>
-╔════════════════════════════════════════════════════════╗
-║   ____                       Game: <asp:Literal runat="server" ID="litGameId" />
-║  /    \   Board Cards        Stage: <asp:Literal runat="server" ID="litStage" />
-║ | (  ) |  [<asp:Literal runat="server" ID="litBoard" />]   Pot: <asp:Literal runat="server" ID="litPot" />
-║  \____/                     Current Bet: <asp:Literal runat="server" ID="litCurrentBet" />
-║                                                        ║
-║ Players (avatars with hole cards):                    ║
++--------------------------------------------------------------+
+|   ____                              Game: <asp:Literal runat="server" ID="litGameId" />
+|  /    \   Board Cards               Stage: <asp:Literal runat="server" ID="litStage" />
+| | (  ) |  [<asp:Literal runat="server" ID="litBoard" />]      Pot: <asp:Literal runat="server" ID="litPot" />
+|  \____/                          Current Bet: <asp:Literal runat="server" ID="litCurrentBet" />
+|                                                              |
+| Players (avatars with hole cards):                          |
 <asp:Literal runat="server" ID="litPlayers" />
-╚════════════════════════════════════════════════════════╝
++--------------------------------------------------------------+
         </pre>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlError" Visible="false">
