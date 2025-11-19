@@ -3,8 +3,8 @@
     <pre>
 ------------------------------------------
 |   O       Player ID: <asp:Literal runat="server" ID="litPlayerId" />
-|  /|\\      Stack: <asp:Literal runat="server" ID="litPlayerStack" /> chips
-|  / \\     Deck: [&spades;][&hearts;][&diams;][&clubs;] ready to wager
+|  /|\      Stack: <asp:Literal runat="server" ID="litPlayerStack" /> chips
+|  / \      Deck: [&spades;][&hearts;][&diams;][&clubs;] ready to wager
 ------------------------------------------
     </pre>
 </div>
