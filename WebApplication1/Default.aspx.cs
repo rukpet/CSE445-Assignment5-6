@@ -64,8 +64,19 @@ namespace WebApplication1
         {
             List<DirectoryRow> rows = new List<DirectoryRow>
             {
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
+                new DirectoryRow
+                {
+                    Provider = "Dmytro Ohorodiichuk",
+                    ComponentType = "REST",
+                    Operation = "Poker new game",
+                    Parameters = "none",
+                    ReturnType = "string (game JSON)",
+                    Description = "Creates a new poker game in the engine",
+                    TryItAnchor = "#tryitPokerNewGame"
+                },
+                new DirectoryRow
+                {
+                    Provider = "Dmytro Ohorodiichuk",
                     ComponentType = "REST",
                     Operation = "Poker apply action",
                     Parameters = "gameId: guid, actionType: string, amount: int",
@@ -73,104 +84,55 @@ namespace WebApplication1
                     Description = "Submits a player action to the poker engine",
                     TryItAnchor = "#tryitPokerApplyAction"
                 },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
+                new DirectoryRow
+                {
+                    Provider = "Dmytro Ohorodiichuk",
                     ComponentType = "WSDL (WCF)",
                     Operation = "Poker bot decision",
-                    Parameters = "gameState: json",
+                    Parameters = "gameId: guid",
                     ReturnType = "BotDecisionResponse",
-                    Description = "Calls Gemini via WCF to suggest the next poker action",
+                    Description = "Calls WCF bot service to suggest the next poker action",
                     TryItAnchor = "#tryitPokerBot"
                 },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
-                    ComponentType = "WSDL (WCF)",
-                    Operation = "WebDownload(url: string)",
-                    Parameters = "url: string",
-                    ReturnType = "string",
-                    Description = "Fetches raw HTML/text from the URL",
-                    TryItAnchor = "#tryitWebDownload"
+                new DirectoryRow
+                {
+                    Provider = "Dmytro Ohorodiichuk",
+                    ComponentType = "User control",
+                    Operation = "Poker game state viewer",
+                    Parameters = "gameId: guid",
+                    ReturnType = "renders PlayerDeckView",
+                    Description = "Loads game JSON from REST API and renders it via PlayerDeckView user control",
+                    TryItAnchor = "#pokerDeckView"
                 },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
-                    ComponentType = "REST",
-                    Operation = "wordfilter(text: string)",
-                    Parameters = "text: string",
-                    ReturnType = "string (filtered words)",
-                    Description = "Removes tags/stopwords; returns tokens",
-                    TryItAnchor = "#tryitWordFilter"
+                new DirectoryRow
+                {
+                    Provider = "Dmytro Ohorodiichuk",
+                    ComponentType = "User control",
+                    Operation = "Poker players money view",
+                    Parameters = "gameId: guid",
+                    ReturnType = "renders PlayerMoneyView list",
+                    Description = "Loads game JSON from REST API and renders PlayerMoneyView controls for each player",
+                    TryItAnchor = "#pokerPlayersMoneyView"
                 },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
-                    ComponentType = "REST",
-                    Operation = "catalog add",
-                    Parameters = "category: string, item: string",
-                    ReturnType = "string",
-                    Description = "Adds key/value to JSON catalog",
-                    TryItAnchor = "#tryitCatalogAdd"
-                },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
-                    ComponentType = "REST",
-                    Operation = "catalog delete",
-                    Parameters = "category: string, item: string",
-                    ReturnType = "string",
-                    Description = "Deletes key/value from JSON catalog",
-                    TryItAnchor = "#tryitCatalogDelete"
-                },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
-                    ComponentType = "REST",
-                    Operation = "catalog list all",
-                    Parameters = "none",
-                    ReturnType = "string (all catalog items)",
-                    Description = "Lists all category/item pairs in JSON catalog",
-                    TryItAnchor = "#tryitCatalogList"
-                },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
-                    ComponentType = "REST",
-                    Operation = "catalog get item",
-                    Parameters = "category: string, item: string",
-                    ReturnType = "string (confirmation if found)",
-                    Description = "Gets a specific category/item pair from JSON catalog",
-                    TryItAnchor = "#tryitCatalogGet"
-                },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
-                    ComponentType = "REST",
-                    Operation = "cart refresh",
-                    Parameters = "none",
-                    ReturnType = "string (cart items)",
-                    Description = "Displays all items currently in the shopping cart",
-                    TryItAnchor = "#tryitCart"
-                },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
-                    ComponentType = "REST",
-                    Operation = "cart checkout",
-                    Parameters = "none",
-                    ReturnType = "string (thank you message)",
-                    Description = "Processes checkout, shows thank you message, validate shipping address via 3rd party API and removes items from catalog",
-                    TryItAnchor = "#tryitCart"
-                },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
+                new DirectoryRow
+                {
+                    Provider = "Dmytro Ohorodiichuk",
                     ComponentType = "DLL",
-                    Operation = "Encrypt",
+                    Operation = "Password hash",
                     Parameters = "string input",
                     ReturnType = "string",
-                    Description = "Local component providing Base64 encryption",
-                    TryItAnchor = "#tryitDllEncrypt"
+                    Description = "Hashes a password using the local DLL component",
+                    TryItAnchor = "#tryitDllHash"
                 },
-                new DirectoryRow {
-                    Provider = "Vladyslav Saniuk",
+                new DirectoryRow
+                {
+                    Provider = "Dmytro Ohorodiichuk",
                     ComponentType = "DLL",
-                    Operation = "Decrypt",
-                    Parameters = "string base64",
-                    ReturnType = "string",
-                    Description = "Local component providing Base64 decryption",
-                    TryItAnchor = "#tryitDllDecrypt"
+                    Operation = "Password verify",
+                    Parameters = "string input, string hash",
+                    ReturnType = "bool",
+                    Description = "Verifies a password against a hash using the local DLL component",
+                    TryItAnchor = "#tryitDllVerify"
                 }
             };
 
