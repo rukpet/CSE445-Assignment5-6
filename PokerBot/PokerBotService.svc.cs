@@ -2,12 +2,15 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
+using System.ServiceModel.Activation;
 using System.Text;
 
 namespace PokerBot
 {
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "PokerBotService" in code, svc and config file together.
     // NOTE: In order to launch WCF Test Client for testing this service, please select PokerBotService.svc or PokerBotService.svc.cs at the Solution Explorer and start debugging.
+    [AspNetCompatibilityRequirements(
+        RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class PokerBotService : IPokerBotService
     {
         public BotDecisionResponse GetBotDecision(BotRequest request)
