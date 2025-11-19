@@ -208,7 +208,7 @@ namespace WebApplication1
             }
         }
 
-        private string DoJson(string url, string body)
+        private string DoPost(string url, string body)
         {
             using (WebClient wc = new WebClient())
             {
@@ -233,7 +233,7 @@ namespace WebApplication1
 
         protected void btnNewGame_Click(object sender, EventArgs e)
         {
-            string result = DoPut("https://localhost:44335/api/games/", "");
+            string result = DoPut("http://webstrar10.fulton.asu.edu/page1/api/games/", "");
             litPoker.Text = JToken.Parse(result).ToString(Newtonsoft.Json.Formatting.Indented).Replace("\r\n", "<br/>");
         }
 
@@ -259,7 +259,7 @@ namespace WebApplication1
                 Amount = amount
             };
 
-            string response = DoJson("https://localhost:44335/api/games/apply", JsonConvert.SerializeObject(request));
+            string response = DoPost("http://webstrar10.fulton.asu.edu/page1/api/games/apply", JsonConvert.SerializeObject(request));
 
             try
             {
@@ -279,7 +279,7 @@ namespace WebApplication1
                 return;
             }
 
-            string gameState = DoGet($"https://localhost:44335/api/games/{gameId}");
+            string gameState = DoGet($"http://webstrar10.fulton.asu.edu/page1/api/games//{gameId}");
 
             if (string.IsNullOrWhiteSpace(gameState))
             {
@@ -347,7 +347,7 @@ namespace WebApplication1
                 return;
             }
 
-            string gameState = DoGet($"https://localhost:44335/api/games/{gameId}");
+            string gameState = DoGet($"http://webstrar10.fulton.asu.edu/page1/api/games/{gameId}");
 
             playerDeckView.Visible = true;
 
@@ -371,7 +371,7 @@ namespace WebApplication1
                 return;
             }
 
-            string gameState = DoGet($"https://localhost:44335/api/games/{gameId}");
+            string gameState = DoGet($"http://webstrar10.fulton.asu.edu/page1/api/games/{gameId}");
 
             if (string.IsNullOrWhiteSpace(gameState))
             {
