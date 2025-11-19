@@ -1,20 +1,17 @@
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="PlayerDeckView.ascx.cs" Inherits="WebApplication1.PlayerDeckView" %>
 <div class="player-deck-view">
     <asp:Panel runat="server" ID="pnlContent" Visible="false">
-        <h4>Game <asp:Literal runat="server" ID="litGameId" /></h4>
-        <p>
-            <strong>Stage:</strong> <asp:Literal runat="server" ID="litStage" /> |
-            <strong>Pot:</strong> <asp:Literal runat="server" ID="litPot" /> |
-            <strong>Current bet:</strong> <asp:Literal runat="server" ID="litCurrentBet" />
-        </p>
-        <div>
-            <strong>Board:</strong>
-            <asp:Literal runat="server" ID="litBoard" />
-        </div>
-        <div style="margin-top:8px;">
-            <strong>Players:</strong>
-            <asp:Literal runat="server" ID="litPlayers" />
-        </div>
+        <pre>
++--------------------------------------------------------------+
+|   ____                              Game: <asp:Literal runat="server" ID="litGameId" />
+|  /    \   Board Cards               Stage: <asp:Literal runat="server" ID="litStage" />
+| | (  ) |  [<asp:Literal runat="server" ID="litBoard" />]      Pot: <asp:Literal runat="server" ID="litPot" />
+|  \____/                          Current Bet: <asp:Literal runat="server" ID="litCurrentBet" />
+|                                                              |
+| Players (avatars with hole cards):                          |
+<asp:Literal runat="server" ID="litPlayers" />
++--------------------------------------------------------------+
+        </pre>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlError" Visible="false">
         <asp:Literal runat="server" ID="litError" />

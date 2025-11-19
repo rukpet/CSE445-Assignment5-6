@@ -37,14 +37,9 @@ namespace WebApplication1
             litCurrentBet.Text = parsed.Value<int?>("CurrentBet")?.ToString() ?? "0";
 
             var boardCards = parsed["Board"] as JArray;
-            if (boardCards != null && boardCards.Count > 0)
-            {
-                litBoard.Text = string.Join(", ", boardCards.Select(FormatCard));
-            }
-            else
-            {
-                litBoard.Text = "(empty)";
-            }
+            litBoard.Text = (boardCards != null && boardCards.Count > 0)
+                ? string.Join("] [", boardCards.Select(FormatCard))
+                : "empty";
 
             var players = parsed["Players"] as JArray;
             int currentIndex = parsed.Value<int?>("CurrentIndex") ?? 0;
@@ -58,27 +53,16 @@ namespace WebApplication1
                     string playerId = HttpUtility.HtmlEncode(player.Value<string>("PlayerId") ?? "unknown");
                     bool folded = player.Value<bool?>("Folded") ?? false;
 
-                    playersSb.Append("<div style=\"margin-top:4px;\">");
-                    playersSb.Append(i == currentIndex ? "<strong>Current player</strong>: " : "Player: ");
-                    playersSb.Append(playerId);
-
-                    if (folded)
-                    {
-                        playersSb.Append(" (folded)");
-                    }
-
                     var hole = player["Hole"] as JArray;
-                    if (i == currentIndex && hole != null && hole.Count > 0)
-                    {
-                        playersSb.Append(" — Hand: ");
-                        playersSb.Append(string.Join(", ", hole.Select(FormatCard)));
-                    }
-                    else
-                    {
-                        playersSb.Append(" — Hand: [hidden]");
-                    }
+                    string cardsDisplay = (i == currentIndex && hole != null && hole.Count > 0)
+                        ? string.Join(" ", hole.Select(card => $"[{FormatCard(card)}]"))
+                        : "[hidden]";
 
-                    playersSb.Append("</div>");
+                    playersSb.AppendLine(FrameLine($"{(i == currentIndex ? ">" : " ")} Player: {playerId}{(folded ? " (folded)" : string.Empty)}"));
+                    playersSb.AppendLine(FrameLine("    O   Hole cards: " + cardsDisplay));
+                    playersSb.AppendLine(FrameLine("   /|\\"));
+                    playersSb.AppendLine(FrameLine("   / \\"));
+                    playersSb.AppendLine(FrameLine(string.Empty));
                 }
 
                 litPlayers.Text = playersSb.ToString();
@@ -97,8 +81,53 @@ namespace WebApplication1
                 return "?";
 
             string rank = HttpUtility.HtmlEncode(token.Value<string>("Rank") ?? "?");
-            string suit = HttpUtility.HtmlEncode(token.Value<string>("Suit") ?? "?");
-            return $"{rank} of {suit}";
+            string suit = token.Value<string>("Suit") ?? "?";
+            string suitIcon = SuitIcon(suit);
+
+            return $"{rank}{suitIcon}";
+        }
+
+        private static string SuitIcon(string suit)
+        {
+            if (string.IsNullOrWhiteSpace(suit))
+            {
+                return "?";
+            }
+
+            switch (suit.Trim().ToLowerInvariant())
+            {
+                case "spades":
+                case "spade":
+                case "s":
+                    return "&spades;";
+                case "hearts":
+                case "heart":
+                case "h":
+                    return "&hearts;";
+                case "diamonds":
+                case "diamond":
+                case "d":
+                    return "&diams;";
+                case "clubs":
+                case "club":
+                case "c":
+                    return "&clubs;";
+                default:
+                    return HttpUtility.HtmlEncode(suit);
+            }
+        }
+
+        private static string FrameLine(string content)
+        {
+            const int innerWidth = 63;
+            string sanitized = content ?? string.Empty;
+
+            if (sanitized.Length > innerWidth)
+            {
+                sanitized = sanitized.Substring(0, innerWidth);
+            }
+
+            return $"| {sanitized.PadRight(innerWidth - 2)}|";
         }
 
         public void ShowErrorMessage(string message)
