@@ -4,7 +4,8 @@
 ------------------------------------------
 |   O       Player ID: <asp:Literal runat="server" ID="litPlayerId" />
 |  /|\      Stack: <asp:Literal runat="server" ID="litPlayerStack" /> chips
-|  / \      Deck: [&spades;][&hearts;][&diams;][&clubs;] ready to wager
+|  / \      Bet this round: <asp:Literal runat="server" ID="litPlayerBet" />
+|           Status: <asp:Literal runat="server" ID="litPlayerStatus" />
 ------------------------------------------
     </pre>
 </div>
